@@ -1,6 +1,12 @@
 const mongoose = require("mongoose")
 
 const ProductSchema = new mongoose.Schema({
+
+    username:{
+        type: String,
+        required: true,
+    },
+
     realName: {
         type: String,
         required: true,
@@ -30,4 +36,4 @@ const ProductSchema = new mongoose.Schema({
 },{ timestamps: true },
 );
 
-module.exports = mongoose.model("Product", UserProductSchemaSchema);
+module.exports = mongoose.model("Product", ProductSchema);

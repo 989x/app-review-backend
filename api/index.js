@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
+
 const authRoute = require("./routes/auth")
+const userRoute = require("./routes/users");
+const productRoute = require("./routes/products");
 
 dotenv.config();
 app.use(express.json());
@@ -16,7 +19,9 @@ mongoose
     .then(console.log("Connected to MongoDB 🤩"))
     .catch((err) => console.log(err));
 
-app.use("/api/auth", authRoute)
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/products", productRoute);
 
 app.listen("5000", () => {
     console.log("🔥 Backend is running. 🔥")
