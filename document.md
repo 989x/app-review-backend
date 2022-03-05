@@ -8,6 +8,8 @@ yarn add express mongoose dotenv multer
 yarn add nodemon
 
 yarn add bcrypt
+
+yarn add multer
 ```
 
 ## ducument  
