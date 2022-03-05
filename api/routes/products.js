@@ -67,4 +67,22 @@ router.get("/:id", async (req, res) => {
     }
 })
 
+//GET ALL PRODUCT 
+router.get("/", async(req, res) => {
+    const username = req.query.user;
+
+    // nothing else if categorises
+    try {
+        let products;
+        if(username){
+            products = await Product.find({username})
+        } else {
+            // products = Product.find();
+        }
+        res.status(200).json(products)
+    } catch(err) {
+        res.status(500).json(err);
+    }
+}) 
+
 module.exports = router 
