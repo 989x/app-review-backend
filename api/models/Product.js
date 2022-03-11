@@ -24,7 +24,11 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    massage: {
+    title: {
+        type: String,
+        required: true,
+    },
+    message: {
         type: String,
         required: true,
     },

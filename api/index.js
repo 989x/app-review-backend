@@ -7,10 +7,26 @@ const authRoute = require("./routes/auth")
 const userRoute = require("./routes/users");
 const productRoute = require("./routes/products");
 
-const multer = require("multer")
+const multer = require("multer");
+const path = require("path");
+
+const cors = require("cors");
+
+// new
+app.use(cors({ origin: "*" }))
+
+// youtube
+// app.use(
+//     cors({
+//         origin: "http://localhost:4000" ,
+//         credentials: true
+//     })
+// )
 
 dotenv.config();
 app.use(express.json());
+// show photo 
+app.use("/images", express.static(path.join(__dirname, "/images")))
 
 mongoose
     .connect(process.env.MONGO_URL, {
@@ -28,8 +44,8 @@ const storage = multer.diskStorage({
         cb(null, "images");
     }, 
     filename:(req, file, cb) => {
-        cb(null, "hello.jpeg");
-        // cb(null, req.body.name);
+        // cb(null, "hello.jpeg");
+        cb(null, req.body.name);
     },
 });
 
@@ -44,6 +60,6 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 
-app.listen("5000", () => {
+app.listen("5001", () => {
     console.log("🔥 Backend is running. 🔥")
 })

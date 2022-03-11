@@ -10,6 +10,7 @@ router.post("/", async (req, res) => {
         res.status(200).json(savedProduct);
     } catch(err){
         res.status(500).json(err)
+        console.log(err)
     }
 });
 
@@ -76,8 +77,10 @@ router.get("/", async(req, res) => {
         let products;
         if(username){
             products = await Product.find({username})
+
+
         } else {
-            // products = Product.find();
+            products = await Product.find();
         }
         res.status(200).json(products)
     } catch(err) {
