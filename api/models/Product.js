@@ -6,6 +6,10 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    profilePic: {
+        type:String,
+        required:false,
+    },
 
     realName: {
         type: String,
