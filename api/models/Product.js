@@ -39,7 +39,14 @@ const ProductSchema = new mongoose.Schema({
     photo: {
         type:String,
         required:false,
-    }
+    },
+
+    // productComment :[
+    //     {
+    //         type: mongoose.Schema.ObjectId,
+    //         // ref:
+    //     }
+    // ]
     
 },{ timestamps: true },
 );
