@@ -18,49 +18,66 @@ exports.list = (req, res) => {
                 data: {}
             });
         } else {
-            let query = [
-                {
-                    $lookup:
+
+            try {
+                let query = [
                     {
-                        from: "users",
-                        localField: "user_id",
-                        foreignField: "_id",
-                        as: "user"
+                        $lookup:
+                        {
+                            from: "users",
+                            localField: "user_id",
+                            foreignField: "_id",
+                            as: "user"
+                        },
+                        
                     },
-                    
-                },
-                {$unwind: "$user"},
-                {
-                    $match: { 
-                        "product_id": mongoose.Types.ObjectId(product_id)
+                    {$unwind: "$user"},
+                    {
+                        $match: { 
+                            "product_id": mongoose.Types.ObjectId(product_id)
+                        }
+                    },
+                    {
+                        $sort: {
+                            createAt: -1
+                        }
                     }
-                },
-                {
-                    $sort: {
-                        createAt: -1
+                ];
+    
+                let total = await ProductComment.countDocuments(query);
+                let page = (req.query.page)?parseInt(req.query.page):1;
+                let perPage = (req.query.perPage)?parseInt(req.query.perPage):10;
+                let skip = (page-1)*perPage;
+                query.push({
+                    $skip: skip,
+                });
+                query.push({
+                    $limit: perPage,
+                })
+    
+    
+                let comments = await ProductComment.aggregate(query); 
+                return res.send({
+                    message: "Comment successfully fetch",
+                    data: {
+                        comments: comments,
+                        meta: {
+                            total: total,
+                            currentPage: page,
+                            perPage: perPage,
+                            totalPages: Math.ceil(total/perPage)
+                        }
                     }
-                }
-            ];
-
-            // let total = await ProductComment.countDocuments(query);
-            // let page = (req.query.page)?parseInt(req.query.page):1;
-            // let perPage = (req.query.perPage)?parseInt(req.query.perPage):10;
-            // let skip = (page-1)*perPage;
-            // query.push({
-            //     $skip: skip,
-            // });
-            // query.push({
-            //     $limit: perPage,
-            // })
+                });
+                
+            } catch(err){
+                return res.status(400).send({
+                    message:err.message,
+                    data:err
+                })
+            }
 
 
-            let comments = await ProductComment.aggregate(query); 
-            return res.send({
-                message: "Comment successfully fetch",
-                data: {
-                    comments: comments,
-                }
-            })
         }
     }).catch((err) => {
         return res.status(400).send({
@@ -109,12 +126,36 @@ exports.create = async(req, res) => {
                         // $push: { Product_comments : commentData._id }
                     }
                 )
-    
+
+                // new
+                let query = [
+                    {
+                        $lookup:
+                        {
+                            from: "users",
+                            localField: "user_id",
+                            foreignField: "_id",
+                            as: "user"
+                        },
+                        
+                    },
+                    {$unwind: "$user"},
+                    {
+                        $match: { 
+                            "_id": mongoose.Types.ObjectId(commentData._id)
+                        }
+                    }
+                ];
+
+                let comment = await ProductComment.aggregate(query);
+                // new
+
                 console.log(product);
     
                 return res.status(200).send({
                     message: "Comment successfully added",
-                    data: commentData
+                    // data: commentData
+                    data: comment[0]
     
                 })
 
