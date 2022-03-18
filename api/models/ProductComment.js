@@ -1,23 +1,25 @@
-// const mongoose = require("mongoose")
+const mongoose = require("mongoose")
 
-// const ProductCommentSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
 
-//     username: {
-//         type: String,
-//         required: true,
-//     },
+    comment: {
+        type: String,
+        require: true,
+    },
 
-//     profilePic: {
-//         type:String,
-//         required:false,
-//     },
+    product_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+    },
+    
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
 
-//     message: {
-//         type: String,
-//         require: true,
-//     }
+}, { timestamps: true },
+);
 
-// }, { timestamps: true },
-// );
+const ProductComment = mongoose.model("ProductComment", schema)
 
-// module.exports = mongoose.model("ProductComment", ProductCommentSchema);
+module.exports = ProductComment

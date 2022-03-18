@@ -23,7 +23,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // not sure
+    // not sure   
     goodOrNot: {
         type: String,
         required: true,
@@ -41,12 +41,12 @@ const ProductSchema = new mongoose.Schema({
         required:false,
     },
 
-    // productComment :[
-    //     {
-    //         type: mongoose.Schema.ObjectId,
-    //         // ref:
-    //     }
-    // ]
+    productComment :[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ProductComment"
+        }
+    ]
     
 },{ timestamps: true },
 );
