@@ -19,5 +19,7 @@ const productController = require("./../controllers/productComment")
             
             
 router.post("/:product_id/comments/create", productController.create)
+router.put("/comments/:comment_id/update", productController.update)
+router.delete("/comments/:comment_id/delete", productController.delete)
 
 module.exports = router 
