@@ -18,6 +18,10 @@ const productController = require("./../controllers/productComment")
             // })
             
             
+           
+            
+router.get("/:product_id/comments", productController.list)
+
 router.post("/:product_id/comments/create", productController.create)
 router.put("/comments/:comment_id/update", productController.update)
 router.delete("/comments/:comment_id/delete", productController.delete)

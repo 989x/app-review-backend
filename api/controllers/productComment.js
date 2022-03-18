@@ -2,6 +2,77 @@ const Product = require("./../models/Product");
 const ProductComment = require('./../models/ProductComment');
 const mongoose = require("mongoose")
 
+// Get 
+exports.list = (req, res) => {
+    let product_id = req.params.product_id;
+    if(!mongoose.Types.ObjectId.isValid(product_id)){
+        return res.status(400).send({
+            message: "Invalid blog id",
+            data: {}
+        });
+    }
+    Product.findOne({_id:product_id}).then(async(product) => {
+        if(!product){
+            return res.status(400).send({
+                message: 'No product found',
+                data: {}
+            });
+        } else {
+            let query = [
+                {
+                    $lookup:
+                    {
+                        from: "users",
+                        localField: "user_id",
+                        foreignField: "_id",
+                        as: "user"
+                    },
+                    
+                },
+                {$unwind: "$user"},
+                {
+                    $match: { 
+                        "product_id": mongoose.Types.ObjectId(product_id)
+                    }
+                },
+                {
+                    $sort: {
+                        createAt: -1
+                    }
+                }
+            ];
+
+            // let total = await ProductComment.countDocuments(query);
+            // let page = (req.query.page)?parseInt(req.query.page):1;
+            // let perPage = (req.query.perPage)?parseInt(req.query.perPage):10;
+            // let skip = (page-1)*perPage;
+            // query.push({
+            //     $skip: skip,
+            // });
+            // query.push({
+            //     $limit: perPage,
+            // })
+
+
+            let comments = await ProductComment.aggregate(query); 
+            return res.send({
+                message: "Comment successfully fetch",
+                data: {
+                    comments: comments,
+                }
+            })
+        }
+    }).catch((err) => {
+        return res.status(400).send({
+            message:err.message,
+            data:err
+        })
+    })
+} 
+
+
+
+
 // Create
 exports.create = async(req, res) => {
     let product_id = req.params.product_id;
