@@ -184,7 +184,8 @@ exports.update = async(req, res) => {
             })
         } else{
             let current_user = req.body.user_id;
-            console.log("-Up- comment.user_id : " + comment.user_id)
+            // console.log("-Up- comment.user_id : " + comment.user_id)
+            console.log("-Up- req.body: " + JSON.stringify(req.body))
             console.log("-Up- req.body.user_id : " + req.body.user_id)
 
             if(comment.user_id != current_user){
@@ -245,6 +246,7 @@ exports.update = async(req, res) => {
 // Delete
 exports.delete = async(req, res) => {
     let comment_id = req.params.comment_id;
+    console.log(comment_id)
     if(!mongoose.Types.ObjectId.isValid(comment_id)){
         return res.status(400).send({
             message:"Invalid comment id",
@@ -259,37 +261,37 @@ exports.delete = async(req, res) => {
             });
         } else{
             let current_user = req.body.user_id;
-            console.log("-De- comment.user_id : " + comment.user_id)
+            // console.log("-De- comment.user_id : " + comment.user_id)
+            console.log("-De- req.body: " + JSON.stringify(req.body)),
             console.log("-De- req.body.user_id : " + req.body.user_id)
+            
+            try { 
+                await ProductComment.deleteOne({_id:comment_id})
+                await Product.updateOne(
+                    {_id: comment.product_id},
+                    {
+                        $pull:{productComment: comment_id}
+                        // $pull:{blog_comments: comment_id}
+                    }
+                )
 
-            if(comment.user_id.toString() != current_user){
-            // if(comment.user_id != current_user){
-                return res.status(400).send({
-                    message: "Access denied",
+                return res.status(200).send({
+                    message:"Comment successfully deleted",
                     data: {}
-                });
-            } else {
-                try { 
-                    await ProductComment.deleteOne({_id:comment_id})
-                    await Product.updateOne(
-                        {_id: comment.product_id},
-                        {
-                            $pull:{productComment: comment_id}
-                            // $pull:{blog_comments: comment_id}
-                        }
-                    )
-
-                    return res.status(200).send({
-                        message:"Comment successfully deleted",
-                        data: {}
-                    })  
-                } catch(err){
-                    return res.status(400).send({
-                        message: err.message,
-                        data: err
-                    })
-                }
+                })  
+            } catch(err){
+                return res.status(400).send({
+                    message: err.message,
+                    data: err
+                })
             }
+            // if(comment.user_id.toString() != current_user){
+            //     return res.status(400).send({
+            //         message: "Access denied",
+            //         data: {}
+            //     });
+            // } else {
+            // }
         }
     }).catch((err) => {
         return res.status(400).send({
