@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+
+    product_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+    },
+    
 },{ timestamps: true },
 );
 

@@ -6,6 +6,10 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    profilePic: {
+        type:String,
+        required:false,
+    },
 
     realName: {
         type: String,
@@ -19,7 +23,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // not sure
+    // not sure   
     goodOrNot: {
         type: String,
         required: true,
@@ -35,7 +39,14 @@ const ProductSchema = new mongoose.Schema({
     photo: {
         type:String,
         required:false,
-    }
+    },
+
+    productComment :[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ProductComment"
+        }
+    ]
     
 },{ timestamps: true },
 );

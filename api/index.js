@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const authRoute = require("./routes/auth")
 const userRoute = require("./routes/users");
 const productRoute = require("./routes/products");
+//
+const productCommentRoute = require("./routes/productsComment");
 
 const multer = require("multer");
 const path = require("path");
@@ -59,6 +61,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
+//
+app.use("/api/products", productCommentRoute);
+
 
 app.listen("5001", () => {
     console.log("🔥 Backend is running. 🔥")
