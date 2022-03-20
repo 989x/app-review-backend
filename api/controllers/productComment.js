@@ -108,17 +108,13 @@ exports.create = async(req, res) => {
                 data: {}
             });
         } else {
-
             try {
-
                 let newCommentDocument = new ProductComment({
                     comment: req.body.comment,
                     product_id: product_id,
                     user_id: req.body.user_id
                 })
-                
                 let commentData = await newCommentDocument.save()
-    
                 await Product.updateOne(
                     {_id:product_id},
                     {
@@ -126,7 +122,6 @@ exports.create = async(req, res) => {
                         // $push: { Product_comments : commentData._id }
                     }
                 )
-
                 // new
                 let query = [
                     {
@@ -136,8 +131,7 @@ exports.create = async(req, res) => {
                             localField: "user_id",
                             foreignField: "_id",
                             as: "user"
-                        },
-                        
+                        },       
                     },
                     {$unwind: "$user"},
                     {
@@ -146,19 +140,14 @@ exports.create = async(req, res) => {
                         }
                     }
                 ];
-
                 let comment = await ProductComment.aggregate(query);
                 // new
-
                 console.log(product);
-    
                 return res.status(200).send({
                     message: "Comment successfully added",
                     // data: commentData
                     data: comment[0]
-    
                 })
-
             } catch(err){
                 return res.status(400).send({
                     message:err.message,
@@ -166,7 +155,6 @@ exports.create = async(req, res) => {
                 })
             }
         }
-
     }).catch((err) => {
         return res.status(400).send({
             message:err.message,
@@ -196,6 +184,9 @@ exports.update = async(req, res) => {
             })
         } else{
             let current_user = req.body.user_id;
+            console.log("-Up- comment.user_id : " + comment.user_id)
+            console.log("-Up- req.body.user_id : " + req.body.user_id)
+
             if(comment.user_id != current_user){
                 return res.status(400).send({
                     message: "Access denied",
@@ -252,7 +243,7 @@ exports.update = async(req, res) => {
 
 
 // Delete
-exports.delete = (req, res) => {
+exports.delete = async(req, res) => {
     let comment_id = req.params.comment_id;
     if(!mongoose.Types.ObjectId.isValid(comment_id)){
         return res.status(400).send({
@@ -267,18 +258,16 @@ exports.delete = (req, res) => {
                 data: {}
             });
         } else{
-
             let current_user = req.body.user_id;
-
-            console.log(comment.user_id)
-            console.log(current_user)
+            console.log("-De- comment.user_id : " + comment.user_id)
+            console.log("-De- req.body.user_id : " + req.body.user_id)
 
             if(comment.user_id.toString() != current_user){
+            // if(comment.user_id != current_user){
                 return res.status(400).send({
                     message: "Access denied",
                     data: {}
                 });
-                
             } else {
                 try { 
                     await ProductComment.deleteOne({_id:comment_id})
