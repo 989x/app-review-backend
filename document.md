@@ -12,6 +12,6 @@ yarn add bcrypt
 yarn add multer
 ```
 
-## ducument  
+## document  
 https://www.npmjs.com/package/bcrypt
 > To hash a password:

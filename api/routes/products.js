@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
+        console.log(req.body)
         if(product.username === req.body.username) {
             try {
                 const updatedProduct = await Product.findByIdAndUpdate(
